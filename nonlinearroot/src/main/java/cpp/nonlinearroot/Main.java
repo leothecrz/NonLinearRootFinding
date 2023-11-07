@@ -72,13 +72,11 @@ public class Main {
             if(file.exists())
                 file.delete();
             file.createNewFile();
-
             writer = new FileWriter(file);
         } catch (IOException e) 
         {
             e.printStackTrace();
         }
-
         StringBuilder SB = new StringBuilder();
         SB.append("ITERATION\t");
         SB.append("ERROR\t");
@@ -88,31 +86,20 @@ public class Main {
         SB.append("F(B)\t");
         SB.append("C\t");
         SB.append("F(C)\t\n");
-
         try {
             writer.write( SB.toString() + "\n" );
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
         if( !((fa >= 0) ^ (fb >= 0)) ) // aPositive? XOR bPositive?
         {
-            System.out.print("A: ");
-            System.out.print(a);
-            System.out.print(" F(a): ");
-            System.out.println(fa);
-            System.out.print("B: ");
-            System.out.print(b);
-            System.out.print(" F(b): ");
-            System.out.println(fb);
-            System.out.println("Function Has No Local Root. Same Sign.");
+            System.out.print("A: ");System.out.print(a);System.out.print(" F(a): ");System.out.println(fa);System.out.print("B: ");System.out.print(b);System.out.print(" F(b): ");System.out.println(fb);System.out.println("Function Has No Local Root. Same Sign.");
             return;
         }
 
         for (int n = 0; n < nMAX; n++) 
         {
-            
             double c = ((a * fb) - (b * fa)) / (fb - fa);
             fc = Equations(c, runEQOne);
 
@@ -125,7 +112,6 @@ public class Main {
             SB.append(String.valueOf(fb)+ "\t");
             SB.append(String.valueOf(c)+ "\t");
             SB.append(String.valueOf(fc)+ "\t");
-
             try {
                 writer.write( SB.toString() + "\n" );
             } catch (IOException e) {
@@ -137,7 +123,6 @@ public class Main {
                 System.out.println("Convergence");
                 return;
             }
-
             if( (fc * fa) < 0 )
             {
                 b = c;
@@ -146,13 +131,7 @@ public class Main {
             {
                 a = c;
             }
-            System.out.print("N: ");
-            System.out.println(n);
-            System.out.print("C: ");
-            System.out.println(c);
-            System.out.print("F(c):");
-            System.out.println(fc);
-
+            System.out.print("N: ");System.out.println(n);System.out.print("C: ");System.out.println(c); System.out.print("F(c):");System.out.println(fc);
         }
 
         try {
@@ -160,6 +139,7 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private static void Bisection(double a, double b, double epsilon, int nMAX, boolean runEQOne)
@@ -176,7 +156,6 @@ public class Main {
             if(file.exists())
                 file.delete();
             file.createNewFile();
-
             writer = new FileWriter(file);
         } catch (IOException e) 
         {
@@ -192,7 +171,6 @@ public class Main {
         SB.append("F(B)\t");
         SB.append("C\t");
         SB.append("F(C)\t\n");
-
         try {
             writer.write( SB.toString() + "\n" );
         } catch (IOException e) {
@@ -201,15 +179,14 @@ public class Main {
 
         if( !((fa >= 0) ^ (fb >= 0)) ) // aPositive? XOR bPositive?
         {
-            System.out.print("A: ");
-            System.out.print(a);
-            System.out.print(" F(a): ");
-            System.out.println(fa);
-            System.out.print("B: ");
-            System.out.print(b);
-            System.out.print(" F(b): ");
-            System.out.println(fb);
-            System.out.println("Function Has Not Local Root. Same Sign.");
+            System.out.print("A: ");System.out.print(a);System.out.print(" F(a): ");System.out.println(fa);System.out.print("B: ");System.out.print(b);System.out.print(" F(b): ");System.out.println(fb);System.out.println("Function Has Not Local Root. Same Sign.");
+            
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
             return;
         }
 
@@ -218,15 +195,7 @@ public class Main {
             error = error / 2;
             double c = a + error;
             fc = Equations(c, runEQOne);
-
-            System.out.print("N: ");
-            System.out.println(n);
-            System.out.print("C: ");
-            System.out.println(c);
-            System.out.print("F(c):");
-            System.out.println(fc);
-            System.out.print("Error: ");
-            System.out.println(error);
+            System.out.print("N: ");System.out.println(n);System.out.print("C: ");System.out.println(c);System.out.print("F(c):");System.out.println(fc);System.out.print("Error: ");System.out.println(error);
 
             SB = new StringBuilder();
             SB.append(String.valueOf(n)+ "\t");
@@ -243,13 +212,18 @@ public class Main {
                 e.printStackTrace();
             }
 
-
             if( Math.abs(error) <= epsilon )
             {
                 System.out.println("Convergence");
+
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 return;
             }
-
             if( ((fa >= 0) ^ (fc >= 0)) )
             {
                 b = c;
@@ -275,11 +249,7 @@ public class Main {
     {
         double fx = Equations(x, runEQOne);
 
-        System.out.print(0);
-        System.out.print(" - x: ");
-        System.out.println(x);
-        System.out.print(" - F(x): ");
-        System.out.println(fx);
+        System.out.print(0);System.out.print(" - x: ");System.out.println(x);System.out.print(" - F(x): ");System.out.println(fx);
 
         FileWriter writer = null;
         try
@@ -314,12 +284,13 @@ public class Main {
             if(Math.abs(fp) < phi)
             {
                 System.out.println("Derivite Value TOO SMALL");
+                
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+
                 return;
             }   
 
@@ -332,8 +303,8 @@ public class Main {
             SB.append(String.valueOf(fx)+ "\t");
             SB.append(String.valueOf(x)+ "\t");
             SB.append(String.valueOf(fp)+ "\t");
-            SB.append(String.valueOf(0)+ "\t");
-            SB.append(String.valueOf(0)+ "\t");
+            SB.append(" "+ "\t");
+            SB.append(" "+ "\t");
             try {
                 writer.write( SB.toString() + "\n" );
             } catch (IOException e) {
@@ -343,22 +314,18 @@ public class Main {
             x = x-div;
             fx = Equations(x, runEQOne);
 
-            System.out.print("n: ");
-            System.out.println(n);
-            System.out.print("x: ");
-            System.out.println(x);
-            System.out.print("F(x): ");
-            System.out.println(fx);
+            System.out.print("n: ");System.out.println(n);System.out.print("x: ");System.out.println(x);System.out.print("F(x): ");System.out.println(fx);
 
             if(Math.abs(div) <= epsilon)
             {
                 System.out.println("Convergence");
+
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+
                 return;
             }
         }
@@ -366,9 +333,9 @@ public class Main {
         try {
             writer.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
     }
 
     private static void Secant(double a, double b, double epsilon, int nMax, boolean runEQOne)
@@ -415,18 +382,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.print("0 ");
-        System.out.print(" a: ");
-        System.out.println(a);
-        System.out.print("  F(a): ");
-        System.out.println(fa);
-
-        System.out.print("1 ");
-        System.out.print(" b: ");
-        System.out.println(b);
-        System.out.print("   F(b): ");
-        System.out.println(fb);
-
+        System.out.print("0 ");System.out.print(" a: ");System.out.println(a);System.out.print("  F(a): ");System.out.println(fa);System.out.print("1 ");System.out.print(" b: ");System.out.println(b);System.out.print("   F(b): ");System.out.println(fb);
 
         for (int n = 0; n < nMax; n++) 
         {
@@ -449,18 +405,18 @@ public class Main {
             if(Math.abs(div) <= epsilon)
             {
                 System.out.println("Convergence");
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return;
             }
 
             a = a-div;
             fa = Equations(a, runEQOne);
 
-            System.out.print("N: ");
-            System.out.println(n);
-            System.out.print("A: ");
-            System.out.println(a);
-            System.out.print("F(a): ");
-            System.out.println(fa);
+            System.out.print("N: ");System.out.println(n);System.out.print("A: ");System.out.println(a);System.out.print("F(a): ");System.out.println(fa);
 
             SB = new StringBuilder();
             SB.append(String.valueOf(n)+ "\t");
@@ -469,8 +425,8 @@ public class Main {
             SB.append(String.valueOf(fa)+ "\t");
             SB.append(String.valueOf(b)+ "\t");
             SB.append(String.valueOf(fb)+ "\t");
-            SB.append(String.valueOf(0)+ "\t");
-            SB.append(String.valueOf(0)+ "\t");
+            SB.append(" "+ "\t");
+            SB.append(" "+ "\t");
             try {
                 writer.write( SB.toString() + "\n" );
             } catch (IOException e) {
@@ -482,7 +438,6 @@ public class Main {
         try {
             writer.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
