@@ -1,30 +1,91 @@
 package cpp.nonlinearroot;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 //Bisection, Newton-Raphson, Secant, False-Position
 
 public class Main {
-    public static void main(String[] args) 
+
+    private static boolean argsCheck(String[] args)
     {
-       Bisection(0, 1, 0.01, 100, true);
+        if(args.length < 5)
+            return false;
 
-       System.out.println("\n Newton \n");
+        try 
+        {
+            for (int i = 0; i < args.length-2; i++) 
+            {
+                Double.parseDouble(args[0]);    
+            }
+        } 
+        catch (NumberFormatException e) 
+        {
+            return false;
+        }
+        
+        if(Boolean.parseBoolean(args[3]))
+            return true;
 
-       Newton(4, 0.01, 0.0001, 100, true);
-
-       System.out.println("\n Secant \n");
-
-       Secant(0, 1, 0.01, 100, true);
-
-       System.out.println("\n False Position \n");
-
-       FalsePosition(1, 3, 0.01, 100, true);
+        return false;
     }
 
-    public static void FalsePosition(double a, double b, double epsilon, int nMAX, boolean runEQOne)
+    private static String fileTemplateName;
+
+    public static void main(String[] args) 
+    {
+        if(!argsCheck(args))
+        {
+            System.err.println("Invalid Arguments");
+            return;
+        }
+
+        
+
+        double a = Double.parseDouble(args[0]);
+        double b = Double.parseDouble(args[1]);
+        double epsilon = Double.parseDouble(args[2]);
+        boolean runEQOne = Boolean.parseBoolean(args[3]);
+        fileTemplateName = args[4];
+
+        Bisection(a, b, epsilon, 100, runEQOne);
+
+        System.out.println("\n Newton \n");
+
+        Newton(a, epsilon, 0.0001, 100, runEQOne);
+
+        System.out.println("\n Secant \n");
+
+        Secant(a, b, epsilon, 100, runEQOne);
+
+        System.out.println("\n False Position \n");
+
+        FalsePosition(a, b, epsilon, 100, runEQOne);
+    }
+
+    private static void FalsePosition(double a, double b, double epsilon, int nMAX, boolean runEQOne)
     {
         double fa = Equations(a, runEQOne);
         double fb = Equations(b, runEQOne);
         double fc;
+
+        FileWriter writer = null;
+        try
+        {
+            File file = new File(fileTemplateName.concat("FalsePostion.txt"));
+            if(file.exists())
+                file.delete();
+            file.createNewFile();
+
+            writer = new FileWriter(file);
+        } catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+        
+
 
         if( !((fa >= 0) ^ (fb >= 0)) ) // aPositive? XOR bPositive?
         {
@@ -70,7 +131,7 @@ public class Main {
         }
     }
 
-    public static void Bisection(double a, double b, double epsilon, int nMAX, boolean runEQOne)
+    private static void Bisection(double a, double b, double epsilon, int nMAX, boolean runEQOne)
     {
         double fa = Equations(a, runEQOne);
         double fb = Equations(b, runEQOne);
@@ -126,7 +187,7 @@ public class Main {
         }
     }
 
-    public static void Newton(double x, double epsilon, double phi, int nMax, boolean runEQOne)
+    private static void Newton(double x, double epsilon, double phi, int nMax, boolean runEQOne)
     {
         double fx = Equations(x, runEQOne);
 
@@ -164,7 +225,7 @@ public class Main {
         }
     }
 
-    public static void Secant(double a, double b, double epsilon, int nMax, boolean runEQOne)
+    private static void Secant(double a, double b, double epsilon, int nMax, boolean runEQOne)
     {
         double fa = Equations(a, runEQOne);
         double fb = Equations(b, runEQOne);
@@ -232,7 +293,7 @@ public class Main {
 
     }
 
-    public static double Equations(double x, boolean one)
+    private static double Equations(double x, boolean one)
     {
         if(one)
             return (2* Math.pow(x, 3)) - (11.7 * Math.pow(x, 2)) + (17.7*x) - 5; 
@@ -240,7 +301,7 @@ public class Main {
             return x + 10 - (x * Math.cosh(50/x)); 
     }
 
-    public static double DerivativeEquations(double x, boolean one)
+    private static double DerivativeEquations(double x, boolean one)
     {
         if(one)
             return ( (60 * Math.pow(x, 2)) - (234 * x) + 177  ) / 10; 
